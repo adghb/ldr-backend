@@ -13,6 +13,7 @@ resource "aws_s3_bucket" "b" {
 */
 }
 
+/* 
 remote_state {
   backend "s3" {
     bucket = "tf-sls-example"
@@ -21,3 +22,4 @@ remote_state {
   }
 }
 
+*/
