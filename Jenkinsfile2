@@ -75,7 +75,7 @@ try {
 
     }
 
-   stage('S3 Push') {
+   stage('Push Package to S3') {
     node {
       
      sh "aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip"
