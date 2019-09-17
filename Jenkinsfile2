@@ -51,7 +51,8 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-        sh 'cd s3 && terraform plan -out=tfplan1 -input=false'
+//        sh 'cd s3 && terraform plan -out=tfplan1 -input=false'
+//        sh 'cd s3 && terraform plan -input=false'
 //          sh "${tfHome}/terraform init"
         }
       }
@@ -65,7 +66,8 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-          sh "set +e; cd s3 && terraform apply -auto-approve -input=false "tfplan1";"
+//          sh "set +e; cd s3 && terraform apply -auto-approve -input=false "tfplan1";"
+          sh "set +e; cd s3 && terraform apply -auto-approve -input=false;"
 //          sh "${tfHome}/terraform init"
         }
       }
