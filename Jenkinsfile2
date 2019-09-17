@@ -1,0 +1,150 @@
+// Jenkinsfile
+String credentialsId = 'awsCredentials'
+
+try {
+  stage('Checkout') {
+    node {
+      cleanWs()
+      checkout scm
+      
+    }
+  }
+
+
+  stage('Test') {
+    node {
+      cleanWs()
+      checkout scm
+
+    }
+  }
+
+  stage('Build') {
+    node {
+      cleanWs()
+      checkout scm
+
+    }
+  }
+
+
+  stage('Push') {
+    node {
+      withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+        credentialsId: credentialsId,
+        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ]]) {
+        ansiColor('xterm') {
+          sh 'cd s3 && terraform init -input=false'
+//          sh "${tfHome}/terraform init"
+        }
+      }
+    }
+
+    node {
+      withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+        credentialsId: credentialsId,
+        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ]]) {
+        ansiColor('xterm') {
+        sh 'cd s3 && terraform plan -out=tfplan1 -input=false'
+//          sh "${tfHome}/terraform init"
+        }
+      }
+    }
+
+    node {
+      withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+        credentialsId: credentialsId,
+        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ]]) {
+        ansiColor('xterm') {
+          sh "set +e; cd s3 && terraform apply -auto-approve -input=false "tfplan1";"
+//          sh "${tfHome}/terraform init"
+        }
+      }
+    }
+
+    aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip
+
+    }
+//  }
+
+  // Run terraform init
+  stage('init') {
+    node {
+      withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+        credentialsId: credentialsId,
+        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ]]) {
+        ansiColor('xterm') {
+          sh 'terraform init -input=false'
+//          sh "${tfHome}/terraform init"
+        }
+      }
+    }
+  }
+
+  // Run terraform plan
+  stage('plan') {
+    node {
+      withCredentials([[
+        $class: 'AmazonWebServicesCredentialsBinding',
+        credentialsId: credentialsId,
+        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+      ]]) {
+        ansiColor('xterm') {
+          sh 'cd lambda && terraform plan -out=tfplan -input=false'
+//          sh "${tfHome}/terraform plan"
+        }
+      }
+    }
+  }
+
+//  if (env.BRANCH_NAME == 'master') {
+
+    // Run terraform apply
+    stage('apply') {
+      node {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: credentialsId,
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          ansiColor('xterm') {
+//              sh """
+//              terraform apply tfplan
+//              terraform apply -input=false -auto-approve "tfplan"
+              sh "set +e; terraform apply -auto-approve -input=false "tfplan";"
+//              sh "${tfHome}/terraform apply -auto-approve"
+//              """
+          }
+        }
+      }
+ }
+  
+currentBuild.result = 'SUCCESS'
+}
+catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException flowError) {
+  currentBuild.result = 'ABORTED'
+}
+catch (err) {
+  currentBuild.result = 'FAILURE'
+  throw err
+}
+finally {
+  if (currentBuild.result == 'SUCCESS') {
+    currentBuild.result = 'SUCCESS'
+  }
+}
+
