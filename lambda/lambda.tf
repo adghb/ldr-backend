@@ -1,7 +1,7 @@
-/*provider "aws" {
+provider "aws" {
   region = "ap-south-1"
 }
-*/
+
 variable "app_version" {
 }
 
