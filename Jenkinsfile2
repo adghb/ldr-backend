@@ -71,7 +71,7 @@ try {
       }
     }
 
-    aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip
+    sh "aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip"
 
     }
 //  }
