@@ -116,5 +116,11 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 
-
+terraform {
+  backend "s3" {
+    bucket = "tf-sls-example"
+    key    = "remote_lambda/terraform.tfstate"
+    region = "ap-south-1"
+  }
+}
 
