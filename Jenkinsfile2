@@ -13,16 +13,16 @@ try {
 
   stage('Test') {
     node {
-      cleanWs()
-      checkout scm
+//      cleanWs()
+//      checkout scm
 
     }
   }
 
   stage('Build') {
     node {
-      cleanWs()
-      checkout scm
+//      cleanWs()
+//      checkout scm
 
     }
   }
