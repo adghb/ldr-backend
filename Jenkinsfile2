@@ -37,7 +37,7 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-          sh "set +e; cd s3 && terraform init -auto-approve -input=false;"
+          sh "set +e; cd s3 && terraform init;"
 //          sh "${tfHome}/terraform init"
         }
       }
