@@ -112,7 +112,7 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-          sh 'cd lambda && terraform plan -input=false'
+//          sh 'cd lambda && terraform plan -input=false'
 //          sh "${tfHome}/terraform plan"
         }
       }
