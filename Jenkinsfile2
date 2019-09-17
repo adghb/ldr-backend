@@ -95,7 +95,7 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-          sh 'terraform init'
+          sh 'cd lambda && terraform init'
 //          sh "${tfHome}/terraform init"
         }
       }
@@ -134,7 +134,7 @@ try {
 //              sh """
 //              terraform apply tfplan
 //              terraform apply -input=false -auto-approve "tfplan"
-              sh "set +e; terraform apply -auto-approve -input=false;"
+              sh "set +e; cd lambda && terraform apply -auto-approve -input=false;"
 //              sh "${tfHome}/terraform apply -auto-approve"
 //              """
           }
