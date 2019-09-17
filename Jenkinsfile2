@@ -72,24 +72,16 @@ try {
     }
 
 
+
+    }
+
+   stage('S3 Push') {
     node {
-      withCredentials([[
-        $class: 'AmazonWebServicesCredentialsBinding',
-        credentialsId: credentialsId,
-        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-      ]]) {
-        ansiColor('xterm') {
-          sh "aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip"
-//          sh "${tfHome}/terraform init"
-        }
-      }
+      
+     sh "aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip"
     }
+  }
 
-//    sh "aws s3 cp example.zip s3://tf-sls-example/v1.0.0/example.zip"
-
-    }
-//  }
 
   // Run terraform init
   stage('init') {
