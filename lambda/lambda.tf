@@ -1,16 +1,20 @@
+
+# Define aws resion 
 provider "aws" {
   region = "ap-south-1"
 }
 
+# Define dynamic variavle for app_version
 variable "app_version" {
 }
 
+# Create lambda function
 resource "aws_lambda_function" "example" {
   function_name = "ServerlessExample"
 
-  # The bucket name as created earlier with "aws s3api create-bucket"
+  # The bucket name as created earlier
   s3_bucket = "tf-sls-example"
-#  s3_key    = "v1.0.0/example.zip"
+  # s3_key    = "v1.0.0/example.zip"
   s3_key    = "v${var.app_version}/example.zip"
 
   # "main" is the filename within the zip file (main.js) and "handler"
@@ -51,13 +55,13 @@ resource "aws_api_gateway_resource" "proxy" {
   path_part   = "{proxy+}"
 }
 
+
 resource "aws_api_gateway_method" "proxy" {
   rest_api_id   = "${aws_api_gateway_rest_api.example.id}"
   resource_id   = "${aws_api_gateway_resource.proxy.id}"
   http_method   = "ANY"
   authorization = "NONE"
 }
-
 
 
 resource "aws_api_gateway_integration" "lambda" {
@@ -69,7 +73,6 @@ resource "aws_api_gateway_integration" "lambda" {
   type                    = "AWS_PROXY"
   uri                     = "${aws_lambda_function.example.invoke_arn}"
 }
-
 
 
 resource "aws_api_gateway_method" "proxy_root" {
@@ -115,7 +118,7 @@ resource "aws_lambda_permission" "apigw" {
   source_arn = "${aws_api_gateway_rest_api.example.execution_arn}/*/*"
 }
 
-
+# Maintain terraform remote state
 terraform {
   backend "s3" {
     bucket = "tf-sls-example"

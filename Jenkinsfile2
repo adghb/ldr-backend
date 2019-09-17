@@ -4,7 +4,7 @@ String credentialsId = 'awsCredentials'
 try {
   stage('Checkout') {
     node {
-//      cleanWs()
+
       checkout scm
       
     }
@@ -13,16 +13,14 @@ try {
 
   stage('Test') {
     node {
-//      cleanWs()
-//      checkout scm
+
 
     }
   }
 
   stage('Build') {
     node {
-//      cleanWs()
-//      checkout scm
+
 
     }
   }
@@ -43,7 +41,7 @@ try {
       }
     }
 
-    node {
+/*    node {
       withCredentials([[
         $class: 'AmazonWebServicesCredentialsBinding',
         credentialsId: credentialsId,
@@ -51,13 +49,13 @@ try {
         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
       ]]) {
         ansiColor('xterm') {
-//        sh 'cd s3 && terraform plan -out=tfplan1 -input=false'
-//        sh 'cd s3 && terraform plan -input=false'
-//          sh "${tfHome}/terraform init"
+        sh 'cd s3 && terraform plan -out=tfplan1 -input=false'
+        sh 'cd s3 && terraform plan -input=false'
+        sh "${tfHome}/terraform init"
         }
       }
     }
-
+*/
     node {
       withCredentials([[
         $class: 'AmazonWebServicesCredentialsBinding',
@@ -84,9 +82,8 @@ try {
     }
   }
 
-
   // Run terraform init
-  stage('init') {
+  stage('Deploy') {
     node {
       withCredentials([[
         $class: 'AmazonWebServicesCredentialsBinding',
@@ -100,10 +97,8 @@ try {
         }
       }
     }
-  }
 
   // Run terraform plan
-  stage('plan') {
     node {
       withCredentials([[
         $class: 'AmazonWebServicesCredentialsBinding',
@@ -117,12 +112,8 @@ try {
         }
       }
     }
-  }
-
-//  if (env.BRANCH_NAME == 'master') {
 
     // Run terraform apply
-    stage('apply') {
       node {
         withCredentials([[
           $class: 'AmazonWebServicesCredentialsBinding',
@@ -131,12 +122,8 @@ try {
           secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) {
           ansiColor('xterm') {
-//              sh """
-//              terraform apply tfplan
-//              terraform apply -input=false -auto-approve "tfplan"
               sh "set +e; cd lambda && terraform apply -var='app_version=1.0.0' -auto-approve -input=false;"
 //              sh "${tfHome}/terraform apply -auto-approve"
-//              """
           }
         }
       }

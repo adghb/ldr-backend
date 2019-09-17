@@ -1,3 +1,5 @@
+
+# Create dynamoDB table
 resource "aws_dynamodb_table" "segment-s3-dynamo" {
     name = "Events"
     read_capacity = 20
