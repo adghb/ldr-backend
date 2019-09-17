@@ -134,7 +134,7 @@ try {
 //              sh """
 //              terraform apply tfplan
 //              terraform apply -input=false -auto-approve "tfplan"
-              sh "set +e; cd lambda && terraform apply -auto-approve -input=false;"
+              sh "set +e; cd lambda && terraform apply -var="app_version=1.0.0" -auto-approve -input=false;"
 //              sh "${tfHome}/terraform apply -auto-approve"
 //              """
           }
