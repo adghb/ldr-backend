@@ -13,3 +13,11 @@ resource "aws_s3_bucket" "b" {
 */
 }
 
+terraform {
+  backend "s3" {
+    bucket = "tf-sls-example"
+    key    = "remote/terraform.tfstate"
+    region = "ap-south-1"
+  }
+}
+
