@@ -13,7 +13,7 @@ resource "aws_s3_bucket" "b" {
 */
 }
 
-terraform {
+remote_state {
   backend "s3" {
     bucket = "tf-sls-example"
     key    = "remote/terraform.tfstate"
